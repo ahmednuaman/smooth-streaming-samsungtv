@@ -56,44 +56,39 @@
         <title></title>
     </head>
     <body>
-        <object id="player" type="application/vnd.ms-sstr+xml"></object>
+        <object id="pluginPlayer" border="0" classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
         <div id="controls">
             <div class="col">
                 <a href="#" id="play-video" class="button">Play</a>
                 <a href="#" id="pause-video" class="button">Pause</a>
-                <a href="#" id="seek-to-5000" class="button">Seek to 5s</a>
-                <a href="#" id="seek-to-10000" class="button">Seek to 10s</a>
-                <a href="#" id="seek-to-20000" class="button">Seek to 20s</a>
-                <a href="#" id="seek-to-30000" class="button">Seek to 30s</a>
+                <a href="#" id="seek-forward" class="button">Seek forward by 5s</a>
+                <a href="#" id="seek-backward" class="button">Seek backward by 5s</a>
             </div>
             <div class="col">
                 State: <span id="player-state">None</span>;
                 Time: <span id="player-time"></span>/<span id="player-duration"></span>;
                 Buffer: <span id="player-buffer"></span>;
-                Bitrate: <span id="player-bitrate-current"></span> (current) vs <span id="player-bitrate-target"></span> (target);
+                Available bitrates: <span id="player-bitrate-available"></span>;
+                Bitrate: <span id="player-bitrate-current"></span>;
             </div>
         </div>
         <script src="config.js"></script>
         <script>
             (function() {
+                var infoPlayerBitrateAvailable = document.getElementById('player-bitrate-available');
                 var infoPlayerBitrateCurrent = document.getElementById('player-bitrate-current');
-                var infoPlayerBitrateTarget = document.getElementById('player-bitrate-target');
                 var infoPlayerBuffer = document.getElementById('player-buffer');
                 var infoPlayerState = document.getElementById('player-state');
                 var infoPlayerTimeDuration = document.getElementById('player-duration');
                 var infoPlayerTimePlayed = document.getElementById('player-time');
-                var playerStates = [ 'Stopped', 'Playing', 'Paused', 'Connecting', 'Buffering', 'Finished', 'Error' ];
-                var playerInterval;
-                var playerMediaInfo;
-                var playerState;
                 var player;
 
                 function playVideo() {
-                    player.play(1);
+                    player.Resume();
                 }
 
                 function pauseVideo () {
-                    player.play(0);
+                    player.Pause();
                 }
 
                 function seekVideo (time) {
@@ -103,58 +98,52 @@
                 function setupVideo () {
                     player = document.getElementById('player');
 
-                    player.data = config.mediaURL;
+                    player.InitPlayer(config.mediaURL + '|COMPONENT=WMDRM');
 
-                    player.onPlayStateChange = handlePlayStateChange;
+                    player.SetDisplayArea(0, 0, 1280, 720);
+
+                    player.OnCurrentPlayTime = 'playerOnCurrentPlayTime';
+                    player.OnStreamInfoReady = 'playerOnStreamInfoReady';
+                    player.OnBufferingStart = 'playerOnBufferingStart';
+                    player.OnBufferingProgress = 'playerOnBufferingProgress';
+                    player.OnBufferingComplete = 'playerOnBufferingComplete';
 
                     document.getElementById('play-video').onclick = playVideo;
                     document.getElementById('pause-video').onclick = pauseVideo;
-                    document.getElementById('seek-to-5000').onclick = handleSeekVideo;
-                    document.getElementById('seek-to-10000').onclick = handleSeekVideo;
-                    document.getElementById('seek-to-20000').onclick = handleSeekVideo;
-                    document.getElementById('seek-to-30000').onclick = handleSeekVideo;
+                    document.getElementById('seek-forward').onclick = seekForward;
+                    document.getElementById('seek-backward').onclick = seekBackward;
+
+                    player.StartPlayback();
                 }
 
-                function handlePlayStateChange (event) {
-                    playerState = player.playState;
-
-                    infoPlayerState.innerHTML = playerStates[playerState];
-
-                    switch (playerState) {
-                        case 1:
-                            startInterval();
-
-                        break;
-
-                        default:
-                            stopInterval();
-
-                        break;
-                    }
+                function playerOnCurrentPlayTime (time) {
+                    infoPlayerTimePlayed.innerHTML = time;
+                    infoPlayerBitrateAvailable.innerHTML = player.GetAvailableBitrates();
+                    infoPlayerBitrateCurrent.innerHTML = player.GetCurrentBitrates();
                 }
 
-                function startInterval () {
-                    playerInterval = setInterval(handleInterval, 100);
+                function playerOnStreamInfoReady (info) {
+                    infoPlayerTimeDuration.innerHTML = player.GetDuration();
                 }
 
-                function handleInterval () {
-                    playerMediaInfo = player.mediaPlayInfo();
-
-                    infoPlayerBitrateCurrent.innerHTML = playerMediaInfo.bitrateInstant;
-                    infoPlayerBitrateTarget.innerHTML = playerMediaInfo.bitrateTarget;
-                    infoPlayerBuffer.innerHTML = playerMediaInfo.bufRemain;
-                    infoPlayerTimeDuration.innerHTML = playerMediaInfo.duration;
-                    infoPlayerTimePlayed.innerHTML = playerMediaInfo.currentPosition;
+                function playerOnBufferingStart () {
+                    infoPlayerBuffer.innerHTML = 'Starting';
                 }
 
-                function stopInterval () {
-                    clearInterval(playerInterval);
+                function playerOnBufferingProgress (percent) {
+                    infoPlayerBuffer.innerHTML = 'Buffer at ' + percent + '%';
                 }
 
-                function handleSeekVideo (event) {
-                    var time = parseInt(event.currentTarget.id.replace('seek-to-', ''));
+                function playerOnBufferingComplete () {
+                    infoPlayerBuffer.innerHTML = 'Completed';
+                }
 
-                    seekVideo(time);
+                function seekForward (event) {
+                    player.JumpForward(5);
+                }
+
+                function seekBackward (event) {
+                    player.JumpBackward(5);
                 }
 
                 function setupLinks () {
