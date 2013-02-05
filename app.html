@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0" />
+        <style>
+            html,
+            body {
+                margin: 0;
+                background: #000000;
+                width: 1280px;
+                height: 720px;
+                overflow: hidden;
+            }
+
+            a:focus {
+                background: #666666;
+                color: #ffffff;
+            }
+
+            #player {
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+
+            #controls {
+                display: block;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                color: #000000;
+            }
+
+            .button {
+                display: block;
+                float: left;
+                padding: 3px 5px;
+                background: #3399ff;
+                margin: 0 3px;
+                color: #ffffff;
+                text-decoration: none;
+            }
+
+            .col {
+                display: block;
+                float: left;
+                width: 600px;
+                padding: 20px;
+            }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <object id="player" type="application/vnd.ms-sstr+xml"></object>
+        <div id="controls">
+            <div class="col">
+                <a href="#" id="play-video" class="button">Play</a>
+                <a href="#" id="pause-video" class="button">Pause</a>
+                <a href="#" id="seek-to-5000" class="button">Seek to 5s</a>
+                <a href="#" id="seek-to-10000" class="button">Seek to 10s</a>
+                <a href="#" id="seek-to-20000" class="button">Seek to 20s</a>
+                <a href="#" id="seek-to-30000" class="button">Seek to 30s</a>
+            </div>
+            <div class="col">
+                State: <span id="player-state">None</span>;
+                Time: <span id="player-time"></span>/<span id="player-duration"></span>;
+                Buffer: <span id="player-buffer"></span>;
+                Bitrate: <span id="player-bitrate-current"></span> (current) vs <span id="player-bitrate-target"></span> (target);
+            </div>
+        </div>
+        <script src="config.js"></script>
+        <script>
+            (function() {
+                var infoPlayerBitrateCurrent = document.getElementById('player-bitrate-current');
+                var infoPlayerBitrateTarget = document.getElementById('player-bitrate-target');
+                var infoPlayerBuffer = document.getElementById('player-buffer');
+                var infoPlayerState = document.getElementById('player-state');
+                var infoPlayerTimeDuration = document.getElementById('player-duration');
+                var infoPlayerTimePlayed = document.getElementById('player-time');
+                var playerStates = [ 'Stopped', 'Playing', 'Paused', 'Connecting', 'Buffering', 'Finished', 'Error' ];
+                var playerInterval;
+                var playerMediaInfo;
+                var playerState;
+                var player;
+
+                function playVideo() {
+                    player.play(1);
+                }
+
+                function pauseVideo () {
+                    player.play(0);
+                }
+
+                function seekVideo (time) {
+                    player.seek(time);
+                }
+
+                function setupVideo () {
+                    player = document.getElementById('player');
+
+                    player.data = config.mediaURL;
+
+                    player.onPlayStateChange = handlePlayStateChange;
+
+                    document.getElementById('play-video').onclick = playVideo;
+                    document.getElementById('pause-video').onclick = pauseVideo;
+                    document.getElementById('seek-to-5000').onclick = handleSeekVideo;
+                    document.getElementById('seek-to-10000').onclick = handleSeekVideo;
+                    document.getElementById('seek-to-20000').onclick = handleSeekVideo;
+                    document.getElementById('seek-to-30000').onclick = handleSeekVideo;
+                }
+
+                function handlePlayStateChange (event) {
+                    playerState = player.playState;
+
+                    infoPlayerState.innerHTML = playerStates[playerState];
+
+                    switch (playerState) {
+                        case 1:
+                            startInterval();
+
+                        break;
+
+                        default:
+                            stopInterval();
+
+                        break;
+                    }
+                }
+
+                function startInterval () {
+                    playerInterval = setInterval(handleInterval, 100);
+                }
+
+                function handleInterval () {
+                    playerMediaInfo = player.mediaPlayInfo();
+
+                    infoPlayerBitrateCurrent.innerHTML = playerMediaInfo.bitrateInstant;
+                    infoPlayerBitrateTarget.innerHTML = playerMediaInfo.bitrateTarget;
+                    infoPlayerBuffer.innerHTML = playerMediaInfo.bufRemain;
+                    infoPlayerTimeDuration.innerHTML = playerMediaInfo.duration;
+                    infoPlayerTimePlayed.innerHTML = playerMediaInfo.currentPosition;
+                }
+
+                function stopInterval () {
+                    clearInterval(playerInterval);
+                }
+
+                function handleSeekVideo (event) {
+                    var time = parseInt(event.currentTarget.id.replace('seek-to-', ''));
+
+                    seekVideo(time);
+                }
+
+                function setupLinks () {
+                    var as = document.getElementById('controls').getElementsByTagName('a');
+                    var len = as.length - 1;
+
+                    for (var i = len; i >= 0; i--) {
+                        setupLinkListener(as, i, len);
+                    };
+
+                    as[0].focus();
+                }
+
+                function setupLinkListener (as, index, length) {
+                    var a = as[index];
+                    var before = index === 0 ? as[length] : as[index - 1];
+                    var next = index === length ? as[0] : as[index + 1];
+
+                    a.onkeydown = function (event) {
+                        switch (event.keyCode) {
+                            // left
+                            case 37:
+                                before.focus();
+
+                            break;
+
+                            // right
+                            case 39:
+                                next.focus();
+
+                            break;
+
+                            // enter!
+                            case 13:
+                                a.onclick();
+
+                            break;
+                        }
+                    };
+                }
+
+                setupVideo();
+
+                setupLinks();
+            })();
+        </script>
+    </body>
+</html>
