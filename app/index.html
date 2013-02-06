@@ -16,13 +16,18 @@
     </head>
     <body onload="initTest()">
         Loading...
-        <form action="http://ahmednuaman.github.com/ss-stv/app.html" id="test-form"></form>
+        <form action="http://ahmednuaman.github.com/ss-stv/app.html" id="test-form">
+            <input type="" name="x" id="test-form-x">
+        </form>
         <script>
             function initTest () {
                 var form = document.getElementById('test-form');
+                var x = document.getElementById('test-form-x');
                 var widgetAPI = new Common.API.Widget();
 
                 widgetAPI.sendReadyEvent();
+
+                x.value = (new Date()).getTime();
 
                 form.submit();
             }
