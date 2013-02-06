@@ -115,7 +115,7 @@
                     document.getElementById('seek-forward').onclick = seekForward;
                     document.getElementById('seek-backward').onclick = seekBackward;
 
-                    player.InitPlayer(config.mediaURL + '|COMPONENT=WMDRM');
+                    player.InitPlayer(config.mediaURL);
 
                     player.SetInitialBuffer(20971520);
                     player.SetTotalBufferSize(52428800);
