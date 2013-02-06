@@ -69,6 +69,7 @@
                 Buffer: <span id="player-buffer"></span>;
                 Available bitrates: <span id="player-bitrate-available"></span>;
                 Bitrate: <span id="player-bitrate-current"></span>;
+                URL: <span id="player-url"></span>;
             </div>
         </div>
         <script src="config.js"></script>
@@ -80,6 +81,7 @@
                 var infoPlayerState = document.getElementById('player-state');
                 var infoPlayerTimeDuration = document.getElementById('player-duration');
                 var infoPlayerTimePlayed = document.getElementById('player-time');
+                var infoPlayerURL = document.getElementById('player-url');
                 var player;
 
                 function playVideo() {
@@ -116,6 +118,8 @@
                     document.getElementById('seek-backward').onclick = seekBackward;
 
                     player.InitPlayer(config.mediaURL);
+
+                    infoPlayerURL.innerHTML = config.mediaURL;
 
                     player.SetInitialBuffer(20971520);
                     player.SetTotalBufferSize(52428800);
