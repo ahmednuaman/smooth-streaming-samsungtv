@@ -163,6 +163,7 @@
                     var next = index === length ? as[0] : as[index + 1];
 
                     a.onkeydown = function (event) {
+                        alert(event.keyCode)
                         switch (event.keyCode) {
                             // left
                             case 4:
