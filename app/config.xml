@@ -18,7 +18,7 @@
 	<childlock itemtype="boolean">n</childlock>
 	<videomute itemtype="boolean">n</videomute>
 	<dcont itemtype="boolean">y</dcont>
-	<widgetname itemtype="string">Smooth Streaming</widgetname>
+	<widgetname itemtype="string">SmoothStreaming</widgetname>
 	<description itemtype="string"></description>
 	<width itemtype="string">1280</width>
 	<height itemtype="string">720</height>
