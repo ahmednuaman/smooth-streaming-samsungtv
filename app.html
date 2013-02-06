@@ -64,6 +64,7 @@
                 <a href="#" id="switch-bitrate" class="button">Switch bitrate</a>
             </div>
             <div class="col">
+                Size: 480x320;
                 State: <span id="player-state">None</span>;
                 Time: <span id="player-time"></span>/<span id="player-duration"></span>;
                 Buffer: <span id="player-buffer"></span>;
@@ -100,7 +101,7 @@
                 function setupVideo () {
                     player = document.getElementById('player');
 
-                    player.SetDisplayArea(0, 0, 960, 480);
+                    player.SetDisplayArea(10, 10, 480, 320);
 
                     player.OnCurrentPlayTime = 'playerOnCurrentPlayTime';
                     player.OnStreamInfoReady = 'playerOnStreamInfoReady';
