@@ -55,9 +55,9 @@
         </style>
         <title></title>
         <script src="http://10.65.46.113:8080/target/target-script-min.js#anonymous"></script>
+        <object id="player" border="0" classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
     </head>
     <body>
-        <object id="player" border="0" classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
         <div id="controls">
             <div class="col">
                 <a href="#" id="play-video" class="button">Play</a>
@@ -99,9 +99,7 @@
                 function setupVideo () {
                     player = document.getElementById('player');
 
-                    player.InitPlayer(config.mediaURL);
-
-                    player.SetDisplayArea(0, 0, 1280, 720);
+                    player.SetDisplayArea(10, 10, 480, 320);
 
                     player.OnCurrentPlayTime = 'playerOnCurrentPlayTime';
                     player.OnStreamInfoReady = 'playerOnStreamInfoReady';
@@ -113,6 +111,12 @@
                     document.getElementById('pause-video').onclick = pauseVideo;
                     document.getElementById('seek-forward').onclick = seekForward;
                     document.getElementById('seek-backward').onclick = seekBackward;
+
+                    player.InitPlayer(config.mediaURL + '|COMPONENT=WMDRM');
+
+                    player.SetInitialBuffer(20971520);
+                    player.SetTotalBufferSize(52428800);
+                    player.SetPendingBuffer(20971520);
 
                     player.StartPlayback();
                 }
