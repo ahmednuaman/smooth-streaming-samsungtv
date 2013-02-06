@@ -70,6 +70,7 @@
                 Buffer: <span id="player-buffer"></span>;
                 Available bitrates: <span id="player-bitrate-available"></span>;
                 Bitrate: <span id="player-bitrate-current"></span>;
+                Target bitrate: <span id="player-bitrate-target"></span>;
                 URL: <span id="player-url"></span>;
             </div>
         </div>
@@ -79,6 +80,7 @@
                 var bitrateCounter = -1;
                 var infoPlayerBitrateAvailable = document.getElementById('player-bitrate-available');
                 var infoPlayerBitrateCurrent = document.getElementById('player-bitrate-current');
+                var infoPlayerBitrateTarget = document.getElementById('player-bitrate-target');
                 var infoPlayerBuffer = document.getElementById('player-buffer');
                 var infoPlayerState = document.getElementById('player-state');
                 var infoPlayerTimeDuration = document.getElementById('player-duration');
@@ -180,6 +182,7 @@
                 function switchBitrate () {
                     var bitrates = player.GetAvailableBitrates().split('|');
                     var bitratesLength = bitrates.length - 1;
+                    var bitrate;
 
                     bitrateCounter++;
 
@@ -187,7 +190,11 @@
                         bitrateCounter = 0;
                     };
 
-                    player.SetTotalBufferSize(Number(bitrates[bitrateCounter]));
+                    bitrate = Number(bitrates[bitrateCounter]);
+
+                    infoPlayerBitrateTarget.innerHTML = bitrate;
+
+                    player.SetTotalBufferSize(bitrate);
                 }
 
                 function setupLinks () {
