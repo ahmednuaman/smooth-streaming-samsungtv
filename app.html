@@ -104,6 +104,11 @@
                     player.OnBufferingStart = 'playerOnBufferingStart';
                     player.OnBufferingProgress = 'playerOnBufferingProgress';
                     player.OnBufferingComplete = 'playerOnBufferingComplete';
+                    player.OnConnectionFailed = 'playerOnConnectionFailed';
+                    player.OnAuthenticationFailed = 'playerOnAuthFailed';
+                    player.OnStreamNotFound = 'playerOnStreamNotFound';
+                    player.OnNetworkDisconnected = 'playerOnNetworkDisconnected';
+                    player.OnRenderError = 'playeOnRenderError';
 
                     document.getElementById('play-video').onclick = playVideo;
                     document.getElementById('pause-video').onclick = pauseVideo;
@@ -117,6 +122,26 @@
                     player.SetPendingBuffer(20971520);
 
                     player.StartPlayback();
+                }
+
+                function playerOnConnectionFailed () {
+                    infoPlayerState.innerHTML = 'Connection failed';
+                }
+
+                function playerOnAuthFailed () {
+                    infoPlayerState.innerHTML = 'Auth failed';
+                }
+
+                function playerOnStreamNotFound () {
+                    infoPlayerState.innerHTML = 'Stream not found';
+                }
+
+                function playerOnNetworkDisconnected () {
+                    infoPlayerState.innerHTML = 'Network disconnected';
+                }
+
+                function playeOnRenderError () {
+                    infoPlayerState.innerHTML = 'Render error: ' + arguments[0];
                 }
 
                 function playerOnCurrentPlayTime (time) {
