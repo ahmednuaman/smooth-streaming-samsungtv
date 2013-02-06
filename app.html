@@ -98,7 +98,7 @@
                 function setupVideo () {
                     player = document.getElementById('player');
 
-                    player.InitPlayer(config.mediaURL + '|COMPONENT=WMDRM');
+                    player.InitPlayer(config.mediaURL);
 
                     player.SetDisplayArea(0, 0, 1280, 720);
 
@@ -163,7 +163,6 @@
                     var next = index === length ? as[0] : as[index + 1];
 
                     a.onkeydown = function (event) {
-                        alert(event.keyCode)
                         switch (event.keyCode) {
                             // left
                             case 4:
