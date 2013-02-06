@@ -86,6 +86,8 @@
                 var infoPlayerTimeDuration = document.getElementById('player-duration');
                 var infoPlayerTimePlayed = document.getElementById('player-time');
                 var infoPlayerURL = document.getElementById('player-url');
+                var bitrates;
+                var bitratesLength;
                 var player;
 
                 function playVideo() {
@@ -150,9 +152,16 @@
                 }
 
                 function playerOnCurrentPlayTime (time) {
+                    var brs = player.GetAvailableBitrates();
+
                     infoPlayerTimePlayed.innerHTML = time;
-                    infoPlayerBitrateAvailable.innerHTML = player.GetAvailableBitrates();
+                    infoPlayerBitrateAvailable.innerHTML = brs;
                     infoPlayerBitrateCurrent.innerHTML = player.GetCurrentBitrates();
+
+                    if (!bitrates) {
+                        bitrates = brs.split('|');
+                        bitratesLength = brs.length - 1;
+                    };
                 }
 
                 function playerOnStreamInfoReady (info) {
@@ -180,8 +189,6 @@
                 }
 
                 function switchBitrate () {
-                    var bitrates = player.GetAvailableBitrates().split('|');
-                    var bitratesLength = bitrates.length - 1;
                     var bitrate;
 
                     bitrateCounter++;
