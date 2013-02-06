@@ -9,7 +9,7 @@
 	<BigListIcon itemtype="string">assets/img/icon_95_78.png</BigListIcon>
 	<category itemtype="string"></category>
 	<autoUpdate itemtype="boolean">n</autoUpdate>
-	<ver itemtype="string">0.100</ver>
+	<ver itemtype="string">1</ver>
 	<mgrver itemtype="string"></mgrver>
 	<fullwidget itemtype="boolean">y</fullwidget>
 	<type itemtype="string">user</type>
@@ -18,7 +18,7 @@
 	<childlock itemtype="boolean">n</childlock>
 	<videomute itemtype="boolean">n</videomute>
 	<dcont itemtype="boolean">y</dcont>
-	<widgetname itemtype="string">SmoothStreaming</widgetname>
+	<widgetname itemtype="string">Smooth</widgetname>
 	<description itemtype="string"></description>
 	<width itemtype="string">1280</width>
 	<height itemtype="string">720</height>
