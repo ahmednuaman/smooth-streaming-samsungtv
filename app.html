@@ -52,7 +52,6 @@
             }
         </style>
         <title></title>
-        <script src="http://192.168.0.19:8080/target/target-script-min.js#anonymous"></script>
     </head>
     <body>
         <object id="player" border="0" classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
@@ -120,10 +119,6 @@
                     player.InitPlayer(config.mediaURL);
 
                     infoPlayerURL.innerHTML = config.mediaURL;
-
-                    player.SetInitialBuffer(20971520);
-                    player.SetTotalBufferSize(52428800);
-                    player.SetPendingBuffer(20971520);
 
                     player.StartPlayback();
                 }
