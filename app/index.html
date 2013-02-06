@@ -16,9 +16,12 @@
     </head>
     <body onload="initTest()">
         Loading...
+        <form action="http://ahmednuaman.github.com/ss-stv/app.html" id="test-form"></form>
         <script>
             function initTest () {
-                window.location = 'http://ahmednuaman.github.com/ss-stv/app.html';
+                var form = document.getElementById('test-form');
+
+                form.submit();
             }
         </script>
     </body>
