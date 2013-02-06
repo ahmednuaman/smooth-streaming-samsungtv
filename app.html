@@ -61,6 +61,7 @@
                 <a href="#" id="pause-video" class="button">Pause</a>
                 <a href="#" id="seek-forward" class="button">Seek forward by 5s</a>
                 <a href="#" id="seek-backward" class="button">Seek backward by 5s</a>
+                <a href="#" id="switch-bitrate" class="button">Switch bitrate</a>
             </div>
             <div class="col">
                 State: <span id="player-state">None</span>;
@@ -73,7 +74,8 @@
         </div>
         <script src="config.js"></script>
         <script>
-            // (function() {
+            (function() {
+                var bitrateCounter = -1;
                 var infoPlayerBitrateAvailable = document.getElementById('player-bitrate-available');
                 var infoPlayerBitrateCurrent = document.getElementById('player-bitrate-current');
                 var infoPlayerBuffer = document.getElementById('player-buffer');
@@ -98,7 +100,7 @@
                 function setupVideo () {
                     player = document.getElementById('player');
 
-                    player.SetDisplayArea(10, 10, 480, 320);
+                    player.SetDisplayArea(0, 0, 1280, 720);
 
                     player.OnCurrentPlayTime = 'playerOnCurrentPlayTime';
                     player.OnStreamInfoReady = 'playerOnStreamInfoReady';
@@ -115,6 +117,7 @@
                     document.getElementById('pause-video').onclick = pauseVideo;
                     document.getElementById('seek-forward').onclick = seekForward;
                     document.getElementById('seek-backward').onclick = seekBackward;
+                    document.getElementById('switch-bitrate').onclick = switchBitrate;
 
                     player.InitPlayer(config.mediaURL);
 
@@ -173,6 +176,19 @@
                     player.JumpBackward(5);
                 }
 
+                function switchBitrate () {
+                    var bitrates = player.GetAvailableBitrates().split('|');
+                    var bitratesLength = bitrates.length - 1;
+
+                    bitrateCounter++;
+
+                    if (bitrateCounter > bitratesLength) {
+                        bitrateCounter = 0;
+                    };
+
+                    player.SetTotalBufferSize(Number(bitrates[bitrateCounter]));
+                }
+
                 function setupLinks () {
                     var as = document.getElementById('controls').getElementsByTagName('a');
                     var len = as.length - 1;
@@ -215,7 +231,7 @@
                 setupVideo();
 
                 setupLinks();
-            // })();
+            })();
         </script>
     </body>
 </html>
